@@ -1,0 +1,550 @@
+<html lang="zh-CN"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>上海添垠工程有限公司</title>
+    <!-- 引入Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <script>
+        // 配置Tailwind自定义颜色 - 可在此处修改颜色方案
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF5722', // 主色调：橙色 - 可修改
+                        secondary: '#2196F3', // 辅助色：蓝色 - 可修改
+                        accent: '#E53935', // 强调色：红色 - 可修改
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            
+            /* 按钮样式 - 可在此处修改按钮外观 */
+            .sticky-call {
+                @apply fixed bottom-6 right-6 z-50 bg-primary text-white rounded-full p-4 shadow-lg 
+                       transition-all duration-300 hover:scale-110 hover:bg-primary/90;
+                box-shadow: 0 4px 12px rgba(255, 87, 34, 0.4);
+            }
+            
+            .free-visit {
+                @apply fixed bottom-24 right-6 z-50 bg-accent text-white rounded-full p-4 shadow-lg 
+                       transition-all duration-300 hover:scale-110 hover:bg-accent/90 flex items-center 
+                       justify-center flex-col cursor-pointer;
+                box-shadow: 0 0 15px rgba(229, 57, 53, 0.6), 0 0 30px rgba(229, 57, 53, 0.3);
+                animation: pulse 2s infinite, float 3s ease-in-out infinite;
+                width: 6rem;
+                height: 6rem;
+            }
+            
+            /* 动画效果 - 可在此处修改动画参数 */
+            @keyframes pulse {
+                0% {
+                    box-shadow: 0 0 0 0 rgba(229, 57, 53, 0.7), 0 0 0 10px rgba(229, 57, 53, 0.2);
+                }
+                70% {
+                    box-shadow: 0 0 0 10px rgba(229, 57, 53, 0.5), 0 0 0 20px rgba(229, 57, 53, 0);
+                }
+                100% {
+                    box-shadow: 0 0 0 0 rgba(229, 57, 53, 0), 0 0 0 10px rgba(229, 57, 53, 0);
+                }
+            }
+            
+            @keyframes float {
+                0% { transform: translateY(0px); }
+                50% { transform: translateY(-10px); }
+                100% { transform: translateY(0px); }
+            }
+            
+            /* 轮播图样式 - 可在此处修改轮播图外观 */
+            .carousel-container {
+                @apply relative overflow-hidden rounded-lg mx-auto;
+                padding-top: 100%; /* 保持1:1比例 - 可修改为其他比例 */
+            }
+            
+            .carousel-slide {
+                @apply absolute inset-0 transition-opacity duration-500 opacity-0;
+            }
+            
+            .carousel-slide.active {
+                @apply opacity-100 z-10;
+            }
+            
+            .carousel-btn {
+                @apply absolute top-1/2 -translate-y-1/2 z-20 bg-black/30 text-white p-2 rounded-full 
+                       hover:bg-black/50 transition-all duration-300 focus:outline-none;
+            }
+            
+            .carousel-dots {
+                @apply absolute bottom-3 left-0 right-0 flex justify-center gap-2 z-20;
+            }
+            
+            .carousel-dot {
+                @apply w-2.5 h-2.5 rounded-full bg-white/50 hover:bg-white transition-all duration-300;
+            }
+            
+            .carousel-dot.active {
+                @apply bg-white w-8;
+            }
+            
+            /* 服务项目卡片样式 */
+            .service-item {
+                @apply bg-white rounded-lg shadow-sm p-5 transition-all duration-300 hover:shadow-md;
+            }
+            
+            /* 文本样式 - 可在此处统一修改文字样式 */
+            .section-text {
+                @apply text-gray-600 leading-relaxed text-base;
+            }
+            
+            .section-title {
+                @apply text-xl md:text-2xl font-bold mb-4 text-gray-800;
+            }
+            
+            .subsection-title {
+                @apply text-lg font-semibold mb-2 text-gray-800;
+            }
+            
+            .company-name {
+                @apply text-3xl md:text-4xl font-bold text-gray-800;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-800">
+    <!-- 可编辑内容数据 - 在此处集中修改公司信息 -->
+    <script>
+        // 公司基本信息 - 可修改这些数据来更新页面内容
+        const companyInfo = {
+            name: "上海添垠工程有限公司", // 公司名称
+            phone: "17334551336", // 联系电话
+            established: "2023", // 成立年份
+            description: "专业从事化粪池清理、隔油池清洗清掏及管道疏通服务，拥有多年行业经验和专业团队，为各类客户提供高效、可靠的工程解决方案。", // 公司简介
+            serviceConcept: "以人为本，持证上岗，规范作业，注重客户体验，以客为尊，团结友爱，共同发展", // 服务理念
+            
+            // 主营业务 - 可添加或修改服务项目
+            services: [
+                {
+                    title: "化粪池清理",
+                    icon: "fa-tint",
+                    description: "专业的化粪池清理服务，采用先进设备和技术，高效清理各类化粪池，确保设施正常运行，防止堵塞和污染。"
+                },
+                {
+                    title: "隔油池清洗",
+                    icon: "fa-filter",
+                    description: "针对餐饮企业及工业场所的隔油池进行彻底清洗，有效去除油污和沉淀物，保持管道畅通，符合环保标准。"
+                },
+                {
+                    title: "管道疏通",
+                    icon: "fa-pipe",
+                    description: "专业疏通各类排水管道，解决堵塞问题，包括家庭管道、工业管道及市政管道，快速响应，高效处理。"
+                }
+            ],
+            
+            // 公司优势 - 可添加或修改优势项目
+            advantages: [
+                {
+                    title: "专业团队",
+                    description: "拥有多年经验的专业团队，熟悉各类管道和池体结构，能够高效解决各类问题"
+                },
+                {
+                    title: "先进设备",
+                    description: "采用先进的清洗和疏通设备，提高工作效率和质量，减少对周边环境的影响"
+                },
+                {
+                    title: "快速响应",
+                    description: "24小时紧急服务热线，快速响应客户需求，及时解决各类管道和池体问题"
+                },
+                {
+                    title: "透明定价",
+                    description: "透明合理的价格体系，无隐形收费，客户不满意！不收费！为客户提供高性价比的服务"
+                }
+            ],
+            
+            // 常见问题 - 可添加或修改问题及答案
+            faqs: [
+                {
+                    question: "如何预约服务？",
+                    answer: `我们提供免费上门服务，可以直接拨打我们的电话17334551336/13661732687联系我们，我们的工作人员会按照您的要求快速上门服务。`
+                },
+                {
+                    question: "服务范围包括哪些地区？",
+                    answer: "我们服务于全上海市，24小时在线服务，全天在线。"
+                },
+                {
+                    question: "化粪池清理需要多长时间？",
+                    answer: "根据化粪池大小和堵塞情况不同，一般需要1-3小时不等，我们的工作人员会在现场评估后给出准确时间。"
+                }
+            ],
+            
+            // 轮播图片 - 替换为您自己的图片URL
+            carouselImages: {
+                top: [
+                    "https://p9-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/5e188d64da4a472db06b9e7c36ff2b73~tplv-a9rns2rl98-image.image?rcl=2025081122143230E2C13E2C3C9F441510&amp;rk3s=8e244e95&amp;rrcfp=e75484ac&amp;x-expires=1755526473&amp;x-signature=fRQvi69BPjEuCMa5DLH06WM1OdA%3D",
+                    "https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/265441befd624d28aea868636aa32efb~tplv-a9rns2rl98-image.image?rcl=202508112213538FDCBAC41780BF49853C&amp;rk3s=8e244e95&amp;rrcfp=e75484ac&amp;x-expires=1755526434&amp;x-signature=2fldr%2BtfUMUMYDACy5sjzqj1lGI%3D",
+                    "https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/5ebb410ac654437393db23770c0b8372~tplv-a9rns2rl98-image.image?rcl=202508112213408FDCBAC41780BF49819A&amp;rk3s=8e244e95&amp;rrcfp=e75484ac&amp;x-expires=1755526421&amp;x-signature=10DxxGjgiynn4MzydMwHa45UYuw%3D"
+                ],
+                services: [
+                    "https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/25f7a8e0be024dd8a62e9eeda9b3f438~tplv-a9rns2rl98-image.image?rcl=2025081122265771377263786960BF30E0&amp;rk3s=8e244e95&amp;rrcfp=e75484ac&amp;x-expires=1755527218&amp;x-signature=h1O%2F6DSEct2VrXPUYx%2BjGS2ykv0%3D",
+                    "https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/93fe7154044f47869470eaecc42e1f00~tplv-a9rns2rl98-image.image?rcl=2025081122263371377263786960BF2487&amp;rk3s=8e244e95&amp;rrcfp=e75484ac&amp;x-expires=1755527194&amp;x-signature=U4mmFETjrg6ZCXl61bu6jHAAJAQ%3D",
+                    "https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/780c999b679445cfbd022c69a774cc45~tplv-a9rns2rl98-image.image?rcl=2025081122261977D55C26D19F7334D303&amp;rk3s=8e244e95&amp;rrcfp=e75484ac&amp;x-expires=1755527180&amp;x-signature=zSGx1iMb7zqMav10zmKeC5m%2FcKs%3D"
+                ],
+                moreContent: [
+                    "https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/6d0d209101ba4728b6510a8a72d2be7f~tplv-a9rns2rl98-image.image?rcl=202508112227242F46A06B16782AAA99D7&amp;rk3s=8e244e95&amp;rrcfp=e75484ac&amp;x-expires=1755527245&amp;x-signature=Y80YxryefGAAcNb3tfTihFIKtVw%3D",
+                    "https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/ca168a50428c40e6a71df64b865cb041~tplv-a9rns2rl98-image.image?rcl=20250811222851D60B5FB3FF938F24F585&amp;rk3s=8e244e95&amp;rrcfp=e75484ac&amp;x-expires=1755527333&amp;x-signature=is0CBs8i0uwJLnZj8j0Ljdj7dXg%3D",
+                    "https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/5d91b5f3abb54d6789b5fa2e8e861f8f~tplv-a9rns2rl98-image.image?rcl=20250811222827E3D66DAF367C9949C2F9&amp;rk3s=8e244e95&amp;rrcfp=e75484ac&amp;x-expires=1755527308&amp;x-signature=lhoW8oQYqQr9TzA%2FadhZONoY3fw%3D"
+                ]
+            }
+        };
+        
+        // 页面加载完成后填充内容
+        document.addEventListener('DOMContentLoaded', function() {
+            populatePageContent();
+            initCarousels();
+        });
+        
+        // 填充页面内容
+        function populatePageContent() {
+            // 填充公司名称
+            document.querySelectorAll('.company-name-element').forEach(el => {
+                el.textContent = companyInfo.name;
+            });
+            
+            // 填充公司简介
+            document.getElementById('company-description').innerHTML = 
+                `${companyInfo.description}公司秉承：${companyInfo.serviceConcept}的服务理念。`;
+            
+            // 填充服务介绍
+            document.getElementById('service-intro').textContent = 
+                `${companyInfo.name}致力于为客户提供一对一解决方案，拥有专业的技术团队和先进的设备。我们注重服务质量和安全规范，积极响应及解决客户的烦恼，确保每一项工程都能达到客户满意。`;
+            
+            // 填充主营业务
+            const servicesContainer = document.getElementById('services-container');
+            servicesContainer.innerHTML = '';
+            companyInfo.services.forEach(service => {
+                servicesContainer.innerHTML += `
+                    <div class="service-item">
+                        <div class="text-primary text-center mb-4">
+                            <i class="fa ${service.icon} text-3xl"></i>
+                        </div>
+                        <h3 class="subsection-title text-center">${service.title}</h3>
+                        <p class="section-text">${service.description}</p>
+                    </div>
+                `;
+            });
+            
+            // 填充公司优势
+            const advantagesContainer = document.getElementById('advantages-container');
+            advantagesContainer.innerHTML = '';
+            companyInfo.advantages.forEach(advantage => {
+                advantagesContainer.innerHTML += `
+                    <div class="bg-white rounded-lg shadow-sm p-4 flex items-start">
+                        <div class="text-primary mr-3 mt-1">
+                            <i class="fa fa-check-circle-o text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="subsection-title">${advantage.title}</h3>
+                            <p class="section-text">${advantage.description}</p>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            // 填充常见问题
+            const faqsContainer = document.getElementById('faqs-container');
+            faqsContainer.innerHTML = '';
+            companyInfo.faqs.forEach(faq => {
+                faqsContainer.innerHTML += `
+                    <div>
+                        <h3 class="subsection-title">${faq.question}</h3>
+                        <p class="section-text mt-1">${faq.answer.replace('${this.phone}', companyInfo.phone)}</p>
+                    </div>
+                `;
+            });
+            
+            // 填充联系电话
+            document.querySelectorAll('.phone-link').forEach(link => {
+                link.href = `tel:${companyInfo.phone}`;
+            });
+            
+            // 填充页脚信息
+            document.getElementById('footer-year').textContent = companyInfo.established;
+            document.getElementById('footer-company').textContent = companyInfo.name;
+            
+            // 填充轮播图片
+            populateCarousel('topCarousel', companyInfo.carouselImages.top);
+            populateCarousel('servicesCarousel', companyInfo.carouselImages.services);
+            populateCarousel('moreContentCarousel', companyInfo.carouselImages.moreContent);
+        }
+        
+        // 填充轮播图
+        function populateCarousel(carouselId, images) {
+            const carousel = document.getElementById(carouselId);
+            const slidesContainer = carousel.querySelector('.carousel-slides-container');
+            const dotsContainer = carousel.querySelector('.carousel-dots');
+            
+            // 清空现有内容
+            slidesContainer.innerHTML = '';
+            dotsContainer.innerHTML = '';
+            
+            // 添加图片和指示器
+            images.forEach((imgUrl, index) => {
+                // 添加轮播图片
+                slidesContainer.innerHTML += `
+                    <div class="carousel-slide ${index === 0 ? 'active' : ''}">
+                        <img src="${imgUrl}" alt="${companyInfo.name}服务图片 ${index + 1}" class="w-full h-full object-cover">
+                    </div>
+                `;
+                
+                // 添加指示器
+                dotsContainer.innerHTML += `
+                    <span class="carousel-dot ${index === 0 ? 'active' : ''}" 
+                          onclick="goToSlide('${carouselId}', ${index})"></span>
+                `;
+            });
+        }
+    </script>
+
+    <!-- 顶部导航 -->
+    <header class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-800 company-name-element"></h1>
+            <div class="text-gray-600">
+                <i class="fa fa-user-circle-o text-xl"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主要内容区 -->
+    <main class="container mx-auto px-4 py-6">
+        <!-- 公司标题和简介 -->
+        <div class="text-center mb-8">
+            <h2 class="company-name mb-4 company-name-element"></h2>
+            <p class="section-text max-w-2xl mx-auto" id="company-description"></p>
+        </div>
+        
+        <!-- 顶部轮播图区域 -->
+        <div class="carousel-container mb-10" id="topCarousel">
+            <div class="carousel-slides-container">
+                <!-- 轮播图片将通过JavaScript动态填充 -->
+            </div>
+            
+            <!-- 轮播控制按钮 -->
+            <button class="carousel-btn left-2" onclick="changeSlide('topCarousel', -1)">
+                <i class="fa fa-chevron-left"></i>
+            </button>
+            <button class="carousel-btn right-2" onclick="changeSlide('topCarousel', 1)">
+                <i class="fa fa-chevron-right"></i>
+            </button>
+            
+            <!-- 轮播指示器 -->
+            <div class="carousel-dots">
+                <!-- 指示器将通过JavaScript动态填充 -->
+            </div>
+        </div>
+        
+        <!-- 主营业务介绍 -->
+        <section class="mb-10">
+            <h2 class="section-title text-center">主营业务</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="services-container">
+                <!-- 服务项目将通过JavaScript动态填充 -->
+            </div>
+        </section>
+        
+        <!-- 服务介绍 -->
+        <section class="mb-10">
+            <h2 class="section-title">我们的服务</h2>
+            <div class="bg-white rounded-lg shadow-sm p-5 mb-6">
+                <p class="section-text" id="service-intro"></p>
+            </div>
+            
+            <!-- 服务项目轮播图 -->
+            <div class="carousel-container mb-6" id="servicesCarousel">
+                <div class="carousel-slides-container">
+                    <!-- 轮播图片将通过JavaScript动态填充 -->
+                </div>
+                
+                <!-- 轮播控制按钮 -->
+                <button class="carousel-btn left-2" onclick="changeSlide('servicesCarousel', -1)">
+                    <i class="fa fa-chevron-left"></i>
+                </button>
+                <button class="carousel-btn right-2" onclick="changeSlide('servicesCarousel', 1)">
+                    <i class="fa fa-chevron-right"></i>
+                </button>
+                
+                <!-- 轮播指示器 -->
+                <div class="carousel-dots">
+                    <!-- 指示器将通过JavaScript动态填充 -->
+                </div>
+            </div>
+        </section>
+        
+        <!-- 优势介绍 -->
+        <section class="mb-10">
+            <h2 class="section-title">我们的优势</h2>
+            <div class="space-y-4" id="advantages-container">
+                <!-- 优势项目将通过JavaScript动态填充 -->
+            </div>
+        </section>
+        
+        <!-- 更多内容区域轮播 -->
+        <section class="mb-10">
+            <div class="carousel-container mb-6" id="moreContentCarousel">
+                <div class="carousel-slides-container">
+                    <!-- 轮播图片将通过JavaScript动态填充 -->
+                </div>
+                
+                <!-- 轮播控制按钮 -->
+                <button class="carousel-btn left-2" onclick="changeSlide('moreContentCarousel', -1)">
+                    <i class="fa fa-chevron-left"></i>
+                </button>
+                <button class="carousel-btn right-2" onclick="changeSlide('moreContentCarousel', 1)">
+                    <i class="fa fa-chevron-right"></i>
+                </button>
+                
+                <!-- 轮播指示器 -->
+                <div class="carousel-dots">
+                    <!-- 指示器将通过JavaScript动态填充 -->
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-sm p-5">
+                <h2 class="section-title">常见问题</h2>
+                <div class="space-y-4" id="faqs-container">
+                    <!-- 常见问题将通过JavaScript动态填充 -->
+                </div>
+            </div>
+        </section>
+        
+        <!-- 底部预留更多空间 -->
+        <div class="h-64"></div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-white border-t border-gray-200 py-6">
+        <div class="container mx-auto px-4 text-center text-gray-500 text-sm">
+            <p>© <span id="footer-year"></span> <span id="footer-company"></span> 版权所有</p>
+        </div>
+    </footer>
+
+    <!-- 免费上门悬浮按钮 -->
+    <div class="free-visit phone-link">
+        <span class="text-xs font-bold text-center">免费上门</span>
+        <span class="text-xs font-bold text-center">1小时到</span>
+    </div>
+
+    <!-- 固定的联系电话按钮 -->
+    <a href="#" class="sticky-call phone-link">
+        <div class="flex items-center">
+            <i class="fa fa-phone text-xl mr-2"></i>
+            <span class="font-bold">立即咨询</span>
+        </div>
+    </a>
+
+    <script>
+        // 轮播图功能实现
+        const carousels = {};
+        
+        // 初始化所有轮播图
+        function initCarousels() {
+            const carouselElements = document.querySelectorAll('.carousel-container');
+            carouselElements.forEach(carousel => {
+                const id = carousel.id;
+                const slides = carousel.querySelectorAll('.carousel-slide');
+                const dots = carousel.querySelectorAll('.carousel-dot');
+                
+                carousels[id] = {
+                    currentSlide: 0,
+                    totalSlides: slides.length,
+                    interval: setInterval(() => {
+                        changeSlide(id, 1);
+                    }, 5000) // 每5秒自动切换 - 可修改
+                };
+            });
+        }
+        
+        // 切换轮播图
+        function changeSlide(carouselId, direction) {
+            const carousel = carousels[carouselId];
+            if (!carousel) return;
+            
+            // 清除自动播放定时器
+            clearInterval(carousel.interval);
+            
+            let newIndex = carousel.currentSlide + direction;
+            if (newIndex < 0) {
+                newIndex = carousel.totalSlides - 1;
+            } else if (newIndex >= carousel.totalSlides) {
+                newIndex = 0;
+            }
+            
+            goToSlide(carouselId, newIndex);
+            
+            // 重新设置自动播放定时器
+            carousel.interval = setInterval(() => {
+                changeSlide(carouselId, 1);
+            }, 5000); // 每5秒自动切换 - 可修改
+        }
+        
+        // 跳转到指定轮播图
+        function goToSlide(carouselId, index) {
+            const carouselElement = document.getElementById(carouselId);
+            const carousel = carousels[carouselId];
+            if (!carouselElement || !carousel) return;
+            
+            // 更新当前索引
+            carousel.currentSlide = index;
+            
+            // 更新轮播图显示
+            const slides = carouselElement.querySelectorAll('.carousel-slide');
+            slides.forEach((slide, i) => {
+                if (i === index) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                }
+            });
+            
+            // 更新指示器
+            const dots = carouselElement.querySelectorAll('.carousel-dot');
+            dots.forEach((dot, i) => {
+                if (i === index) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+        
+        // 按钮滚动动画效果
+        window.addEventListener('scroll', () => {
+            const callButton = document.querySelector('.sticky-call');
+            const freeVisitButton = document.querySelector('.free-visit');
+            
+            if (window.scrollY > 100) {
+                callButton.classList.add('scale-100');
+                callButton.classList.remove('scale-90', 'opacity-80');
+                
+                freeVisitButton.classList.add('scale-100');
+                freeVisitButton.classList.remove('scale-90', 'opacity-80');
+            } else {
+                callButton.classList.add('scale-90', 'opacity-80');
+                callButton.classList.remove('scale-100');
+                
+                freeVisitButton.classList.add('scale-90', 'opacity-80');
+                freeVisitButton.classList.remove('scale-100');
+            }
+        });
+    </script>
+    </body></html>
